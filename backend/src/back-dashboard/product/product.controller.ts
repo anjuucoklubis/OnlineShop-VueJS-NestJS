@@ -87,11 +87,11 @@ export class ProductController {
         'INFORMATION-RESPONSE': {
           REQUESTNAME: 'READ ONE PRODUCT BY ID',
           METHOD: 'GET',
-          'STATUS-RESPONSE': HttpStatus.NOT_FOUND,
+          'STATUS-RESPONSE': HttpStatus.OK,
           url: `http://127.0.0.1:3000/product/read-by-id/${id}`,
         },
-        ERROR: {
-          message: 'Product not found',
+        'RESPONE-DATA': {
+          MESSAGE: `PRODUCT ID '${id}' NOT FOUND `,
         },
       };
       return response;

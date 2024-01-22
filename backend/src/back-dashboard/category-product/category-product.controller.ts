@@ -59,22 +59,40 @@ export class CategoryProductController {
   async getOneCategoryProduct(@Param('id') id: number) {
     const result =
       await this.categoryProductService.findOneCategoryProduct(+id);
-    const response = {
-      'INFORMATION-RESPONSE': {
-        REQUESTNAME: 'READ CATEGORY PRODUCT BY ID',
-        METHOD: 'GET',
-        'STATUS-RESPONSE': HttpStatus.OK,
-        url: 'http://127.0.0.1:3000/category-product/read-by-id/id',
-      },
-      'RESPONSE-DATA': {
-        id: result.id,
-        name: result.name,
-        image: result.image,
-        createdAt: result.createdAt,
-        updatedAt: result.updatedAt,
-      },
-    };
-    return response;
+      try{
+        const response = {
+          'INFORMATION-RESPONSE': {
+            REQUESTNAME: 'READ CATEGORY PRODUCT BY ID',
+            METHOD: 'GET',
+            'STATUS-RESPONSE': HttpStatus.OK,
+            url: `http://127.0.0.1:3000/category-product/read-by-id/${id}`,
+          },
+          'RESPONSE-DATA': {
+            id: result.id,
+            name: result.name,
+            image: result.image,
+            createdAt: result.createdAt,
+            updatedAt: result.updatedAt,
+          },
+          
+        };
+        return response;
+      } catch{
+        const responsee = {
+          'INFORMATION-RESPONSE': {
+            REQUESTNAME: 'READ CATEGORY PRODUCT BY ID',
+            METHOD: 'GET',
+            'STATUS-RESPONSE': HttpStatus.OK,
+            url: `http://127.0.0.1:3000/category-product/read-by-id/${id}`,
+          },
+          'RESPONSE-DATA': {
+            MESSAGE: `CATEGORY PRODUCT ID '${id}' NOT FOUND` 
+          },
+          
+        };
+        return responsee
+      }
+     
   }
 
   @Post('create')
