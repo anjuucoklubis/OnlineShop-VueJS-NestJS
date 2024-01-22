@@ -65,7 +65,7 @@ export class CategoryProductController {
             REQUESTNAME: 'READ CATEGORY PRODUCT BY ID',
             METHOD: 'GET',
             'STATUS-RESPONSE': HttpStatus.OK,
-            url: 'http://127.0.0.1:3000/category-product/read-by-id/id',
+            url: `http://127.0.0.1:3000/category-product/read-by-id/${id}`,
           },
           'RESPONSE-DATA': {
             id: result.id,
@@ -83,10 +83,10 @@ export class CategoryProductController {
             REQUESTNAME: 'READ CATEGORY PRODUCT BY ID',
             METHOD: 'GET',
             'STATUS-RESPONSE': HttpStatus.OK,
-            url: 'http://127.0.0.1:3000/category-product/read-by-id/id',
+            url: `http://127.0.0.1:3000/category-product/read-by-id/${id}`,
           },
           'RESPONSE-DATA': {
-           DATA: 'NOT FOUND' 
+            MESSAGE: `CATEGORY PRODUCT ID '${id}' NOT FOUND` 
           },
           
         };
