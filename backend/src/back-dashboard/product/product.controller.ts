@@ -1,12 +1,10 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   HttpException,
   HttpStatus,
   Param,
-  Patch,
   Post,
   Res,
   UploadedFile,
@@ -17,7 +15,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { StorageUploadProduct } from 'src/utils/storage-upload';
 import { Prisma } from '@prisma/client';
 import { Response } from 'express';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('Product')
 @Controller('product')
 export class ProductController {
   constructor(private productService: ProductService) {}
@@ -125,8 +124,8 @@ export class ProductController {
   //         desc: result.desc,
   //         price: result.price,
   //         quantity: result.quantity,
-  //         image: result.image,  
-  //         categoryproductId: result.categoryproductId,  
+  //         image: result.image,
+  //         categoryproductId: result.categoryproductId,
   //         createdAt: result.createdAt,
   //         updatedAt: result.updatedAt,
   //       },
@@ -142,46 +141,45 @@ export class ProductController {
   // }
 
   // ProductController
-@Post('create')
-@UseInterceptors(FileInterceptor('image', StorageUploadProduct))
-async addProduct(
-  @UploadedFile() file: Express.Multer.File,
-  @Body() body: Prisma.ProductCreateInput,
-) {
-  try {
-    if (!file || !file.filename) {
-      throw new Error('No image file uploaded');
+  @Post('create')
+  @UseInterceptors(FileInterceptor('image', StorageUploadProduct))
+  async addProduct(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() body: Prisma.ProductCreateInput,
+  ) {
+    try {
+      if (!file || !file.filename) {
+        throw new Error('No image file uploaded');
+      }
+      body.image = file.filename;
+      const result = await this.productService.createProduct(body);
+      const response = {
+        'INFORMATION-RESPONSE': {
+          REQUESTNAME: 'CREATE PRODUCT',
+          METHOD: 'POST',
+          'STATUS-RESPONSE': HttpStatus.CREATED,
+          url: 'http://127.0.0.1:3000/product/create/',
+        },
+        'RESPONSE-DATA': {
+          id: result.id,
+          name: result.name,
+          desc: result.desc,
+          price: result.price,
+          quantity: result.quantity,
+          image: result.image,
+          categoryproductId: result.categoryproductId,
+          createdAt: result.createdAt,
+          updatedAt: result.updatedAt,
+        },
+      };
+
+      return response;
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(
+        'Internal Server Error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
-    body.image = file.filename;
-    const result = await this.productService.createProduct(body);
-    const response = {
-      'INFORMATION-RESPONSE': {
-        REQUESTNAME: 'CREATE PRODUCT',
-        METHOD: 'POST',
-        'STATUS-RESPONSE': HttpStatus.CREATED,
-        url: 'http://127.0.0.1:3000/product/create/',
-      },
-      'RESPONSE-DATA': {
-        id: result.id,
-        name: result.name,
-        desc: result.desc,
-        price: result.price,
-        quantity: result.quantity,
-        image: result.image,
-        categoryproductId: result.categoryproductId,
-        createdAt: result.createdAt,
-        updatedAt: result.updatedAt,
-      },
-    };
-
-    return response;
-  } catch (error) {
-    console.error(error);
-    throw new HttpException(
-      'Internal Server Error',
-      HttpStatus.INTERNAL_SERVER_ERROR,
-    );
   }
-}
-
 }
